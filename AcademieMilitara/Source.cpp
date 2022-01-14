@@ -1948,7 +1948,7 @@ void meniuMilitar(string fisier) {
 		cout << "      18.CLASA 1" << endl;
 		cout << "      19.PRINCIPAL" << endl;
 		cout << "---------------------------" << endl;
-		cout << "	9. <-- Inapoi " << endl;
+		cout << "	20. <-- Inapoi " << endl;
 		cout << "	0. X exit " << endl;
 
 		cout << "Introduceti optiunea: ";
@@ -1966,7 +1966,7 @@ void meniuMilitar(string fisier) {
 			Ofiter ofiter;
 			cin >> ofiter;
 			g << ofiter;
-			g.close();
+			
 			cout << endl << "S-a inregistrat cu succes!";
 
 		}
@@ -1975,7 +1975,7 @@ void meniuMilitar(string fisier) {
 			Subofiter subofiter;
 			cin >> subofiter;
 			g << subofiter;
-			g.close();
+			
 			cout << endl << "S-a inregistrat cu succes!";
 			ifstream f(fisier);
 			f >> subofiter;
@@ -1986,8 +1986,8 @@ void meniuMilitar(string fisier) {
 			MaistruMilitar maistru;
 			cin >> maistru;
 			g << maistru;
-			g.close();
-			cout << endl << "S-a inregistrat cu succes!";
+			
+			cout << endl << "S-a inregistrat cu succes!"<<endl<<endl;
 			ifstream f(fisier);
 			f >> maistru;
 			cout << maistru;
@@ -2000,7 +2000,7 @@ void meniuMilitar(string fisier) {
 			break;
 		case 1:
 			break;
-		case 9:
+		case 20:
 			system("CLS");
 			meniuInregistrareDatabase(fisier);
 			break;
@@ -2019,7 +2019,13 @@ void meniuMilitar(string fisier) {
 }
 
 void meniuCivil(string fisier) {
-	//meniuFisier();
+	system("CLS");
+	cout << "Adaugati inregistarile de civili..."<<endl<<endl;
+	ofstream g(fisier);
+	Civil civil;
+	cin >> civil;
+	g << civil;
+	cout << "S-a inregistrat cu succes!" << endl;
 
 }
 
@@ -2138,6 +2144,8 @@ void meniuInregistrareDatabase(string fisier) {
 			meniuMilitar(fisier);
 			break;
 		case 2:
+			system("CLS");
+			meniuCivil(fisier);
 			break;
 		case 3:
 			break;
@@ -2265,5 +2273,7 @@ int main(int argc, char* argv[]) {
 		cout << endl;
 		cout << endl;
 	}
+
+	
 
 }
