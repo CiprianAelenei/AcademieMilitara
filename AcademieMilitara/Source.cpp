@@ -9,6 +9,10 @@
 
 using namespace std;
 
+void invalid() {
+	cout<<endl<< "VALOARE INVALIDA! Reintroduceti ->"<<endl;
+}
+
 class ExceptieMesaj : public exception
 {
 	string mesaj;
@@ -81,7 +85,7 @@ public:
 		}
 	}
 
-	Membru(const char* nume, const char* prenume, const char* adresa, int varsta, bool sex, int nrZile, int oreLucrate[]) :id(contorMembri++) {
+	Membru(const char* nume, const char* prenume, const char* locatie, int varsta, bool sex, int nrZile, int oreLucrate[]) :id(contorMembri++) {
 		if (strlen(nume) > 3) {
 			this->nume = new char[strlen(nume) + 1];
 			strcpy(this->nume, nume);
@@ -99,9 +103,9 @@ public:
 			this->prenume = new char[strlen("") + 1];
 			strcpy(this->prenume, "");
 		}
-		if (strlen(adresa) > 5) {
-			this->locatie = new char[strlen(adresa) + 1];
-			strcpy(this->locatie, adresa);
+		if (strlen(locatie) > 3) {
+			this->locatie = new char[strlen(locatie) + 1];
+			strcpy(this->locatie, locatie);
 		}
 		else {
 			this->locatie = new char[strlen("") + 1];
@@ -1000,6 +1004,9 @@ public:
 		return this->numeMilitariSubordine;
 	}
 	void setNumeMilitariSubordine(string* numeMilitariSubordine) {
+		if (numeMilitariSubordine != NULL)
+			delete[] numeMilitariSubordine;
+		numeMilitariSubordine = new string[this->nrMilitariSubordine];
 		for (int i = 0; i < this->nrMilitariSubordine; i++) {
 			this->numeMilitariSubordine[i] = numeMilitariSubordine[i];
 		}
@@ -1073,6 +1080,11 @@ public:
 		cout << "\nnr militari subordine: ";
 		in >> o.nrMilitariSubordine;
 		cout << "/nIntroduceti militarii din subordine";
+
+		if (o.numeMilitariSubordine != NULL)
+			delete[] o.numeMilitariSubordine;
+		o.numeMilitariSubordine = new string[o.nrMilitariSubordine];
+
 		for (int i = 0; i < o.nrMilitariSubordine; i++) {
 			cout << "\nmilitarul " << "i" << " = ";
 			in >> o.numeMilitariSubordine[i];
@@ -1149,12 +1161,15 @@ public:
 		}
 		cout << "\nnr militari subordine: ";
 		in >> o.nrMilitariSubordine;
-		cout << "/nIntroduceti militarii din subordine";
+		cout << "\nIntroduceti militarii din subordine";
+		if (o.numeMilitariSubordine != NULL)
+			delete[] o.numeMilitariSubordine;
+		o.numeMilitariSubordine = new string[o.nrMilitariSubordine];
+
 		for (int i = 0; i < o.nrMilitariSubordine; i++) {
 			cout << "\nmilitarul " << "i" << " = ";
 			in >> o.numeMilitariSubordine[i];
 		}
-
 		return in;
 	}
 
@@ -1866,18 +1881,18 @@ public:
 # pragma endregion
 
 void header();
-void meniuPrincipal();
-void meniuFisier();
-void meniuIntern();
-int meniuMilitar();
-void meniuCivil();
-void meniuInterogareDatabase();
-void meniuInregistrareDatabase();
+void meniuPrincipal(string fisier);
+void meniuFisier(string fisier);
+void meniuIntern(string fisier);
+void meniuMilitar(string fisier);
+void meniuCivil(string fisier);
+void meniuInterogareDatabase(string fisier);
+void meniuInregistrareDatabase(string fisier);
 
 
 #pragma region meniuri
 
-void meniuFisier(int alegere) {
+void meniuFisier(string fisier) {
 
 
 	cout << "Optiuni: " << endl;
@@ -1886,13 +1901,9 @@ void meniuFisier(int alegere) {
 	cout << "2. Salvare in binar" << endl;
 	cout << "3. Salvare in CSV" << endl;
 
-
-
-
-
 }
 
-void meniuIntern() {
+void meniuIntern(string fisier) {
 	cout << "	Selecteaza o categorie:" << endl;
 	cout << "	1. Militar " << endl;
 	cout << "	2. Civil " << endl;
@@ -1903,65 +1914,111 @@ void meniuIntern() {
 	cin >> alegere;
 }
 
-int meniuMilitar() {
-
-	cout << "Selectati gradul: " << endl;
-
-	cout << "I. OFITER" << endl;
-
-	cout << "      1.SUBLOCOTENENT " << endl;
-	cout << "      2.LOCOTENENT " << endl;
-	cout << "      3.CAPITAN " << endl;
-	cout << "      4.MAIOR " << endl;
-	cout << "      5.LOCOTENENT COLONEL " << endl;
-	cout << "      6.COLONEL " << endl;
-	cout << "      6.GENERAL " << endl;
-
-	cout << "II. SUBOFITER" << endl;
-
-	cout << "      7.SERGENT" << endl;
-	cout << "      8.SERGENT MAJOR " << endl;
-	cout << "      9.PLUTONIER " << endl;
-	cout << "      10.PLUTONIER MAJOR " << endl;
-	cout << "      11.PLUTONIER ADJUTANT" << endl;
-	cout << "      12.PLUTONIER PRINCIPAL" << endl;
-
-	cout << "III. MAISTRU" << endl;
-
-	cout << "      13.CLASA 5" << endl;
-	cout << "      14.CLASA 4" << endl;
-	cout << "      15.CLASA 3" << endl;
-	cout << "      16.CLASA 2" << endl;
-	cout << "      17.CLASA 1" << endl;
-	cout << "      18.PRINCIPAL" << endl;
-	cout << "---------------------------" << endl;
-	cout << "	0. inapoi " << endl;
-
+void meniuMilitar(string fisier) {
+	system("CLS");
 	int alegere;
+	do {
+		cout << "Selectati gradul: " << endl;
 
-	cout << "Introduceti optiunea: ";
-	cin >> alegere;
+		cout << "I. OFITER" << endl;
 
-	cout << alegere << endl;
+		cout << "      1.SUBLOCOTENENT " << endl;
+		cout << "      2.LOCOTENENT " << endl;
+		cout << "      3.CAPITAN " << endl;
+		cout << "      4.MAIOR " << endl;
+		cout << "      5.LOCOTENENT COLONEL " << endl;
+		cout << "      6.COLONEL " << endl;
+		cout << "      7.GENERAL " << endl;
 
+		cout << "II. SUBOFITER" << endl;
 
-	if (alegere >= 0 || alegere > 19) {
-		if (alegere = 0) {
-			system("CLS");
-			meniuPrincipal();
+		cout << "      8.SERGENT" << endl;
+		cout << "      9.SERGENT MAJOR " << endl;
+		cout << "      10.PLUTONIER " << endl;
+		cout << "      11.PLUTONIER MAJOR " << endl;
+		cout << "      12.PLUTONIER ADJUTANT" << endl;
+		cout << "      13.PLUTONIER PRINCIPAL" << endl;
+
+		cout << "III. MAISTRU" << endl;
+
+		cout << "      14.CLASA 5" << endl;
+		cout << "      15.CLASA 4" << endl;
+		cout << "      16.CLASA 3" << endl;
+		cout << "      17.CLASA 2" << endl;
+		cout << "      18.CLASA 1" << endl;
+		cout << "      19.PRINCIPAL" << endl;
+		cout << "---------------------------" << endl;
+		cout << "	9. <-- Inapoi " << endl;
+		cout << "	0. X exit " << endl;
+
+		cout << "Introduceti optiunea: ";
+		cin >> alegere;
+
+		if (alegere >= 1 && alegere <= 7) {
+			/*Ofiter ofiter;
+			cout << endl;*/
+			/*ifstream f("fisier.txt", ios::in);
+			f >> ofiter;
+			cout << ofiter;
+			f.close();*/
+			//cout << fisier;
+			ofstream g(fisier);
+			Ofiter ofiter;
+			cin >> ofiter;
+			g << ofiter;
+			g.close();
+			cout << endl << "S-a inregistrat cu succes!";
+
 		}
-		meniuFisier(alegere);
-		cout << "Alegerea este invalida!!" << endl << endl;
-		meniuMilitar();
-	}
-	else cout << "Alegerea este invalida!!" << endl << endl;
+		if (alegere >= 8 && alegere <= 13) {
+			ofstream g(fisier);
+			Subofiter subofiter;
+			cin >> subofiter;
+			g << subofiter;
+			g.close();
+			cout << endl << "S-a inregistrat cu succes!";
+			ifstream f(fisier);
+			f >> subofiter;
+			cout << subofiter;
+		}
+		if (alegere >= 14 && alegere <= 19) {
+			ofstream g(fisier);
+			MaistruMilitar maistru;
+			cin >> maistru;
+			g << maistru;
+			g.close();
+			cout << endl << "S-a inregistrat cu succes!";
+			ifstream f(fisier);
+			f >> maistru;
+			cout << maistru;
+		}
+
+		switch (alegere) {
+		case 0: 
+			system("CLS");
+			exit(0);
+			break;
+		case 1:
+			break;
+		case 9:
+			system("CLS");
+			meniuInregistrareDatabase(fisier);
+			break;
+		default:
+			cout << "Optiune indisponibila!!" << endl;
+		}
+		if(alegere!=0&&alegere!=9){
+
+		}
 
 
-	return alegere;
+
+	
+	}while(alegere >= 0);
 
 }
 
-void meniuCivil() {
+void meniuCivil(string fisier) {
 	//meniuFisier();
 
 }
@@ -1971,9 +2028,9 @@ void header() {
 	cout << "Buna ziua, " << user << " !" << endl;
 }
 
-void meniuPrincipal() {
+void meniuPrincipal(string fisier) {
 	system("CLS");
-	header ();
+	header();
 	int alegere;
 
 	do {
@@ -1990,15 +2047,15 @@ void meniuPrincipal() {
 			exit(0);
 			break;
 		case 1: cout << "\n...INTEROGARE DATABASE..."<<endl;
-			meniuInterogareDatabase();
+			meniuInterogareDatabase(fisier);
 			break;
 		case 2: cout << "\n...INREGISTRARE IN DATABASE..."<<endl;
-			meniuInregistrareDatabase();
+			meniuInregistrareDatabase(fisier);
 			break;
 		default:
 			system("CLS");
 			cout << "!! ALEGERE INVALIDA !!" << endl << endl;
-			//meniuPrincipal();
+			meniuPrincipal(fisier);
 		}
 
 	} while(alegere >= 0);
@@ -2007,7 +2064,7 @@ void meniuPrincipal() {
 
 #pragma endregion 
 
-void meniuInterogareDatabase() {
+void meniuInterogareDatabase(string fisier) {
 	system("CLS");
 	header();
 	
@@ -2018,7 +2075,7 @@ void meniuInterogareDatabase() {
 		cout << "|       INTEROGARE DATABASE         |" << endl;
 		cout << "|-----------------------------------|" << endl;
 		cout << "| 1. Afisati toate inregistarile    |" << endl;
-		cout << "| 2. Afisati inregistrar MILITARI   |" << endl;
+		cout << "| 2. Afisati inregistrari MILITARI  |" << endl;
 		cout << "| 3. Afisati inregistrari CVIILI    |" << endl;
 		cout << "|-----------------------------------|" << endl;
 		cout << "  9. <-- INAPOI" << endl;
@@ -2026,12 +2083,18 @@ void meniuInterogareDatabase() {
 		cout << endl;
 		cout << "Selectati o optiune: " << endl;
 		cin >> opt;
-		switch (opt) {
+		Ofiter ofiter;
+		ifstream f(fisier);
+		f >> ofiter;
+		cout << endl;
+		switch(opt) {
 		case 0:
 			system("CLS");
 			exit(0);
 			break;
 		case 1:
+			system("CLS");
+			cout << ofiter;
 			break;
 		case 2:
 			break;
@@ -2039,14 +2102,15 @@ void meniuInterogareDatabase() {
 			break;
 		case 9:
 			system("CLS");
-			meniuPrincipal();
+			meniuPrincipal(fisier);
 		default:
 			cout << "Optiune indisponibila!!"<<endl;
 		}
 	} while(opt >= 0);
 }
 
-void meniuInregistrareDatabase() {
+
+void meniuInregistrareDatabase(string fisier) {
 	system("CLS");
 	header();
 	
@@ -2070,6 +2134,8 @@ void meniuInregistrareDatabase() {
 			exit(0);
 			break;
 		case 1:
+			system("CLS");
+			meniuMilitar(fisier);
 			break;
 		case 2:
 			break;
@@ -2077,7 +2143,7 @@ void meniuInregistrareDatabase() {
 			break;
 		case 9:
 			system("CLS");
-			meniuPrincipal();
+			meniuPrincipal(fisier);
 		default:
 			cout << "Optiune indisponibila!!" << endl;
 		}
@@ -2086,7 +2152,7 @@ void meniuInregistrareDatabase() {
 
 
 
-void main() {
+int main(int argc, char* argv[]) {
 
 #pragma region Testare-Membru
 	//    Membru m1;
@@ -2174,10 +2240,30 @@ void main() {
 	//    cin >> militar4;
 	//    cout << militar4;
 
-	meniuPrincipal();
 
-
-
+	//testare argumente main()
+	/*cout << argc<<endl;
+	for (int i = 1; i < argc; i++) {
+		cout << argv[i];
+	}*/
 
 #pragma endregion;
+
+	//meniuPrincipal(fisier);
+	if (argc > 1) {
+		const char* fisierChar = argv[1];
+		//const char* fisierChar2 = argv[2];
+		//cout << fisierChar;
+		string fisier = fisierChar;
+		//string fisier2 = fisierChar2;
+		//cout << fisier;
+		//cout << fisier2;
+		meniuPrincipal(fisier);
+	}
+	else {
+		cout << "Nu exista un fisier alocat!"<<endl<<" Rulati programul.exe alaturi de fisierul pe care doriti sa-l asignati";
+		cout << endl;
+		cout << endl;
+	}
+
 }
